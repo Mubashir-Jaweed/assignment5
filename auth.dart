@@ -1,34 +1,40 @@
 import 'dart:io';
-import 'dart:convert';
+import 'data.dart';
+import 'app.dart';
 
 void auth() {
   handleAuthOption();
 }
 
 class Auth {
+  Data api = Data();
+
   login() {
-    print('Login Classs Fun');
+    print('.. Login .. ');
+    var [email, pass] = getEmailAndPassword();
+
+    if (api.readUser(email, pass)) {
+      app();
+    } else {
+      login();
+    }
   }
 
   SignUp() {
     print('\n');
     print('Select account Type');
     print("");
-    print('1. for : Login as Rider');
-    print('2. for : Login as User');
 
     String accType = handleSignUpOption();
-    var [email ,pass] = getEmailAndPassword();
-    
-    Map createNewUser = {
-      'accType':accType,
-      'email':email,
-      "password":pass,
-    };
+    var [email, pass] = getEmailAndPassword();
 
-    File('./DB/data.json').writeAsStringSync(json.encode(createNewUser));
-    
-    print([accType,email,pass]);
+    Map createNewUser = {
+      'accType': accType,
+      'email': email,
+      "pass": pass,
+    };
+    api.addUser(createNewUser);
+    login();
   }
 }
 
@@ -58,6 +64,8 @@ void handleAuthOption() {
 }
 
 handleSignUpOption() {
+  print('1. for : SignUp as Admin');
+  print('2. for : SignUp as User');
   bool isSelectedSignUpOption = true;
   while (isSelectedSignUpOption) {
     var accType = stdin.readLineSync();
@@ -86,6 +94,6 @@ getEmailAndPassword() {
     print('Please enter valid email & Password');
     getEmailAndPassword();
   } else {
-    return([email, pass]);
+    return ([email, pass]);
   }
 }

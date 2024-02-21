@@ -1,7 +1,7 @@
 import 'auth.dart';
 
 void main() {
-  print('Welcome To Bykea');
+  print('Create Your Account');
   print("\n");
-  auth();
+    auth();
 }
